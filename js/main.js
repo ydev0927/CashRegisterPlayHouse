@@ -45,6 +45,9 @@
       totalcost : function(){
         return this.history.reduce((prev, item) => prev + item.cost, 0);
       },
+      lastItem : function(){
+        return this.history.length ? this.history[this.history.length - 1] : {};
+      },
     },
     methods: {
       onStartBtnClick : function(){

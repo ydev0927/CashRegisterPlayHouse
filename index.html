@@ -32,6 +32,13 @@
           </div>
         </div>
 
+        <div class="row lastItemCost" v-show="lastItem.cost != null">
+          <div class="col text-center">
+            <span class="cost" v-text="lastItem.cost"></span>
+            <span class="unit">えん</span>
+          </div>
+        </div>
+
         <div class="row">
           <div class="col">
             <div v-for="(item, index) in history.slice().reverse()">
