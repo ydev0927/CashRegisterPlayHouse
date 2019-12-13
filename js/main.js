@@ -7,7 +7,9 @@
       console.log(res.format + ": " + res.code);
 
       //バーコードからコストを算出
-      const costCode = res.code.substr(res.code.length - 5, 4);
+      //const costCode = res.code.substr(res.code.length - 5, 4);
+      //金額が高くなりがちだったので下2桁を採用
+      const costCode = res.code.substr(res.code.length - 2);
       const cost = Number(costCode);
       const item = new itemCls(cost);
       //履歴に追加
