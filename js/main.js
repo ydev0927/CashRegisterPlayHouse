@@ -5,7 +5,16 @@
     beep : false,
     resultFunction: function(res) {
       console.log(res.format + ": " + res.code);
-      controller.pushRes(res);
+
+      //バーコードからコストを算出
+      const costCode = res.code.substr(res.code.length - 5, 4);
+      const cost = Number(costCode);
+      const item = new itemCls(cost);
+      //履歴に追加
+      store.pushHistory(item);
+      // 音声を再生
+      const uttr = new SpeechSynthesisUtterance(`${cost}えんがいってん`);
+      speechSynthesis.speak(uttr)
     },
     cameraSuccess: function(stream) {
       console.log('cameraSuccess');
@@ -15,15 +24,15 @@
     },
     getDevicesError: function(error) {
       console.log(error);
-      controller.message = error;
+      vmController.message = error;
     },
     getUserMediaError: function(error) {
       console.log(error);
-      controller.message = error;
+      vmController.message = error;
     },
     cameraError: function(error) {
       console.log(error);
-      controller.message = error;
+      vmController.message = error;
     }
   }
 
@@ -35,41 +44,73 @@
     this.cost = cost;
   };
 
-  const controller = new Vue({
+  const store = window.store = {
+    state : {
+      history : []
+    },
+    pushHistory : function(item){
+      this.state.history.push(item);
+    },
+    removeHistory: function(index){
+      this.state.history.splice(index, 1);
+    },
+    clearHistory: function(){
+      this.state.history = [];
+    }
+  };
+
+  const vmController = new Vue({
     el : "#v-controller",
     data : {
-      message : "",
-      history: []
+      appState : store.state,
+      message : ""
     },
     computed: {
       totalcost : function(){
-        return this.history.reduce((prev, item) => prev + item.cost, 0);
+        return this.appState.history.reduce((prev, item) => prev + item.cost, 0);
       },
       lastItem : function(){
-        return this.history.length ? this.history[this.history.length - 1] : {};
+        return this.appState.history.length ? this.appState.history[this.appState.history.length - 1] : {};
       },
     },
     methods: {
       onStartBtnClick : function(){
-        this.history = [];
+        store.clearHistory();
+      },
+      onHistoryBtnClick : function(){
+        vmHistory.show();
       },
       onTestBtnClick : function(){
-        this.pushRes({ code : "0000000000000000000" + Math.ceil(Math.random() * 100)});
-      },
-      removeItem : function(index){
-        this.history.splice(index, 1);
-      },
-      pushRes: function(res){
-        //バーコードからコストを算出
-        const costCode = res.code.substr(res.code.length - 5, 4);
-        const cost = Number(costCode);
-        //履歴に追加
-        this.history.push(new itemCls(cost));
-        // 音声を再生
-        const uttr = new SpeechSynthesisUtterance(`${cost}えんがいってん`);
-        speechSynthesis.speak(uttr)
+        opts.resultFunction({ code : "0000000000000000000" + Math.ceil(Math.random() * 100)});
       },
     }
   });
+
+  const vmHistory = new Vue({
+    el : "#v-history",
+    data : {
+      appState : store.state,
+      visible : false
+    },
+    methods: {
+      show : function(){
+        this.visible = true;
+      },
+      hide : function(){
+        this.visible = false;
+      },
+      removeHistory : function(index){
+        store.removeHistory(index);
+      },
+      getTotalFormula : function(index){
+        console.log(index);
+        const prevCost = this.appState.history
+                        .filter((item, _index) => _index < index)
+                        .reduce((prev, current) => prev + current.cost, 0);
+        const cost = this.appState.history[index].cost;
+        return `${prevCost} + ${cost} = ${prevCost + cost}`;
+      }
+    }
+  })
 
 })();
