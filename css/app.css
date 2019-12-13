@@ -49,31 +49,11 @@ table tbody tr {
   border-radius: 50%;
 } */
 
-.centering {
+/* .centering {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
   margin: auto;
-}
-
-.history-body {
-  position: absolute;
-  z-index: 1000000000;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  padding: 0.5rem;
-  background-color: #ffffff;
-}
-
-.slide-enter-active, .slide-leave-active {
-  transform: translate(0px, 0px);
-  transition: transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms;
-}
-
-.slide-enter, .slide-leave-to {
-  transform: translateX(100vw) translateX(0px);
-}
+} */

@@ -59,11 +59,17 @@
     }
   };
 
+  const MODE = {
+    Newest : 0x00,
+    History : 0x01,
+  }
+
   const vmController = new Vue({
     el : "#v-controller",
     data : {
       appState : store.state,
-      message : ""
+      message : "",
+      mode : MODE.Newest
     },
     computed: {
       totalcost : function(){
@@ -72,32 +78,26 @@
       lastItem : function(){
         return this.appState.history.length ? this.appState.history[this.appState.history.length - 1] : {};
       },
+      visibleNewest : function(){
+        return this.mode === MODE.Newest;
+      },
+      visibleHistory : function(){
+        return this.mode === MODE.History;
+      }
     },
     methods: {
       onStartBtnClick : function(){
         store.clearHistory();
       },
       onHistoryBtnClick : function(){
-        vmHistory.show();
+        if(this.mode === MODE.Newest){
+          this.mode = MODE.History;
+        }else{
+          this.mode = MODE.Newest
+        };
       },
       onTestBtnClick : function(){
         opts.resultFunction({ code : "0000000000000000000" + Math.ceil(Math.random() * 100)});
-      },
-    }
-  });
-
-  const vmHistory = new Vue({
-    el : "#v-history",
-    data : {
-      appState : store.state,
-      visible : false
-    },
-    methods: {
-      show : function(){
-        this.visible = true;
-      },
-      hide : function(){
-        this.visible = false;
       },
       removeHistory : function(index){
         store.removeHistory(index);
@@ -111,6 +111,6 @@
         return `${prevCost} + ${cost} = ${prevCost + cost}`;
       }
     }
-  })
+  });
 
 })();
