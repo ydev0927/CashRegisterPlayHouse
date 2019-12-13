@@ -35,7 +35,7 @@
         <div class="row">
           <div class="col">
             <div v-for="(item, index) in history.slice().reverse()">
-              {{history.length - index}} こめ {{ item.cost }} えん
+              {{history.length - index}} こめ {{ item.cost }} えん　<span @click="removeItem(index)">[とりけし]</span>
             </div>
           </div>
           <div class="col">

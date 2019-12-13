@@ -53,6 +53,9 @@
       onTestBtnClick : function(){
         this.pushRes({ code : "0000000000000000000" + Math.ceil(Math.random() * 100)});
       },
+      removeItem : function(index){
+        this.history.splice(index, 1);
+      },
       pushRes: function(res){
         //バーコードからコストを算出
         const costCode = res.code.substr(res.code.length - 5, 4);
