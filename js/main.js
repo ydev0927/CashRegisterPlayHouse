@@ -1,8 +1,29 @@
 (function(){
   'use strict'
 
+  const opts = {
+    resultFunction: function(res) {
+      setMessage(res.format + ": " + res.code);
+    },
+    cameraSuccess: function(stream) {
+      console.log('cameraSuccess');
+    },
+    canPlayFunction: function() {
+      console.log('canPlayFunction');
+    },
+    getDevicesError: function(error) {
+      setMessage(error);;
+    },
+    getUserMediaError: function(error) {
+      setMessage(error);
+    },
+    cameraError: function(error) {
+      setMessage(error);
+    }
+  }
+
   const decoder = new WebCodeCamJS('#display');
-  decoder.init();
+  decoder.init(opts);
   decoder.play();
 
   const itemCls = function(cost){
@@ -12,6 +33,7 @@
   const controller = new Vue({
     el : "#v-controller",
     data : {
+      message : "",
       history: []
     },
     computed: {
@@ -29,5 +51,10 @@
       }
     }
   });
+
+  function setMessage(message){
+    console.log(message);
+    controller.message = message;
+  }
 
 })();

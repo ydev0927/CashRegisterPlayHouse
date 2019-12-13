@@ -1,3 +1,8 @@
 .btn.disabled {
   cursor: default !important;
 }
+
+.error {
+  color: red;
+  font-weight: bold;
+}

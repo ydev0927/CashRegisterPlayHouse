@@ -19,6 +19,12 @@
     <div id="v-controller" class="row">
       <div class="col">
 
+        <div class="row" v-show="message">
+          <div class="col">
+            <p class="error">{{ message }}</p>
+          </div>
+        </div>
+
         <div class="row">
           <div class="col btn-group">
             <button type="button" class="btn btn-primary" @click="onStartBtnClick">はじめから</button>
