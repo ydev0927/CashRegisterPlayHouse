@@ -2,8 +2,10 @@
   'use strict'
 
   const opts = {
+    beep : false,
     resultFunction: function(res) {
-      setMessage(res.format + ": " + res.code);
+      console.log(res.format + ": " + res.code);
+      controller.pushRes(res);
     },
     cameraSuccess: function(stream) {
       console.log('cameraSuccess');
@@ -12,13 +14,16 @@
       console.log('canPlayFunction');
     },
     getDevicesError: function(error) {
-      setMessage(error);;
+      console.log(error);
+      controller.message = error;
     },
     getUserMediaError: function(error) {
-      setMessage(error);
+      console.log(error);
+      controller.message = error;
     },
     cameraError: function(error) {
-      setMessage(error);
+      console.log(error);
+      controller.message = error;
     }
   }
 
@@ -46,15 +51,19 @@
         this.history = [];
       },
       onTestBtnClick : function(){
-        const item = new itemCls(Math.ceil(Math.random() * 100));
-        this.history.push(item);
-      }
+        this.pushRes({ code : "0000000000000000000" + Math.ceil(Math.random() * 100)});
+      },
+      pushRes: function(res){
+        //バーコードからコストを算出
+        const costCode = res.code.substr(res.code.length - 5, 4);
+        const cost = Number(costCode);
+        //履歴に追加
+        this.history.push(new itemCls(cost));
+        // 音声を再生
+        const uttr = new SpeechSynthesisUtterance(`${cost}えんがいってん`);
+        speechSynthesis.speak(uttr)
+      },
     }
   });
-
-  function setMessage(message){
-    console.log(message);
-    controller.message = message;
-  }
 
 })();
